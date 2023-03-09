@@ -10,5 +10,9 @@ The goal of this project is to learn Java by creating a text editor with a Swing
 - Autosave functionality
 - **Frequency analysis of characters in text**
 - Word count feature
+- Toggleable line numbering on the left side
+- **File encryption with selectable encryption algorithm.**
+- Highlighting for specified keywords
+- Search functionality
 
 ## Currently implemented:

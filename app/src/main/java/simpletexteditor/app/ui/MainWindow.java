@@ -1,13 +1,15 @@
 package simpletexteditor.app.ui;
 
 import simpletexteditor.app.ui.dialog.AboutDialog;
+import simpletexteditor.app.ui.menu.FileMenu;
+import simpletexteditor.app.ui.menu.HelpMenu;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class MainWindow {
+public class MainWindow implements ActionListener {
     /**
      * JPanel used as top-level container of UI components
      */
@@ -35,11 +37,11 @@ public class MainWindow {
     /**
      * Menu with file options
      */
-    private final JMenu fileMenu;
+    private final FileMenu fileMenu;
     /**
      * Menu with help options
      */
-    private final JMenu helpMenu;
+    private final HelpMenu helpMenu;
     /**
      * JFrame containing the top-level window
      */
@@ -69,38 +71,9 @@ public class MainWindow {
         rootPanel.add(bottomToolBar, BorderLayout.PAGE_END);
 
         menuBar = new JMenuBar();
-        JMenuItem menuItem;
-        fileMenu = new JMenu("File");
-        fileMenu.getAccessibleContext().setAccessibleDescription("File menu");
-        menuItem = new JMenuItem("New");
-        menuItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                inputPane.setText("");
-            }
-        });
-        fileMenu.add(menuItem);
-        fileMenu.addSeparator();
-        menuItem = new JMenuItem("Exit");
-        menuItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                exit();
-            }
-        });
-        fileMenu.add(menuItem);
+        fileMenu = new FileMenu(this);
         menuBar.add(fileMenu);
-        helpMenu = new JMenu("Help");
-        fileMenu.getAccessibleContext().setAccessibleDescription("Help menu");
-        menuItem = new JMenuItem("About");
-        menuItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                AboutDialog about = new AboutDialog(frame);
-                about.setVisible(true);
-            }
-        });
-        helpMenu.add(menuItem);
+        helpMenu = new HelpMenu(this);
         menuBar.add(helpMenu);
     }
 
@@ -124,5 +97,21 @@ public class MainWindow {
     private void exit() {
         // TODO: add checks for unsaved changes and such.
         frame.dispose();
+    }
+
+    /**
+     * Invoked when the UI is interacted with.
+     */
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        Object source = e.getSource();
+        if (source == fileMenu.newItem) {
+            inputPane.setText("");
+        } else if (source == fileMenu.exitItem) {
+            exit();
+        } else if (source == helpMenu.aboutItem) {
+            AboutDialog about = new AboutDialog(frame);
+            about.setVisible(true);
+        }
     }
 }

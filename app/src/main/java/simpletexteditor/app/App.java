@@ -4,6 +4,7 @@
 package simpletexteditor.app;
 
 import org.apache.commons.text.WordUtils;
+import simpletexteditor.app.ui.MainWindow;
 import simpletexteditor.list.LinkedList;
 
 import static simpletexteditor.app.MessageUtils.getMessage;
@@ -16,5 +17,8 @@ public class App {
         tokens = split(getMessage());
         String result = join(tokens);
         System.out.println(WordUtils.capitalize(result));
+
+        MainWindow window = new MainWindow();
+        window.run("test");
     }
 }

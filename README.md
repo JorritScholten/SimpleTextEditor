@@ -11,7 +11,7 @@ The goal of this project is to learn Java by creating a text editor with a Swing
         - [x] Add *About* dialog
     - [x] Create *File* menu
         - [ ] Add *New File* item
-        - [ ] Add *Exit* item
+        - [x] Add *Exit* item
 - [ ] File save functionality
     - [ ] Create file picker dialog
     - [ ] Add item to *File* menu

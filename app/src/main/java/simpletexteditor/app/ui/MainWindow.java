@@ -71,6 +71,12 @@ public class MainWindow {
         fileMenu = new JMenu("File");
         fileMenu.getAccessibleContext().setAccessibleDescription("File menu");
         menuItem = new JMenuItem("Exit");
+        menuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                exit();
+            }
+        });
         fileMenu.add(menuItem);
         menuBar.add(fileMenu);
         helpMenu = new JMenu("Help");
@@ -99,5 +105,13 @@ public class MainWindow {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
+    }
+
+    /**
+     * Try to close window, checks for unsaved changes and aborts if necessary.
+     */
+    private void exit() {
+        // TODO: add checks for unsaved changes and such.
+        frame.dispose();
     }
 }

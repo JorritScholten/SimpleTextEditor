@@ -5,11 +5,11 @@ The goal of this project is to learn Java by creating a text editor with a Swing
 ## Task list
 
 - [x] Simple window with text pane
-- [ ] Add menu toolbar to window
+- [x] Add menu toolbar to window
     - [x] Create menu toolbar
-    - [ ] Create *Help* menu
-        - [ ] Add *About* dialog
-    - [ ] Create *File* menu
+    - [x] Create *Help* menu
+        - [x] Add *About* dialog
+    - [x] Create *File* menu
         - [ ] Add *New File* item
         - [ ] Add *Exit* item
 - [ ] File save functionality

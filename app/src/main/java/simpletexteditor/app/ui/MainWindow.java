@@ -2,6 +2,8 @@ package simpletexteditor.app.ui;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class MainWindow {
     /**
@@ -65,13 +67,23 @@ public class MainWindow {
         rootPanel.add(bottomToolBar, BorderLayout.PAGE_END);
 
         menuBar = new JMenuBar();
+        JMenuItem menuItem;
         fileMenu = new JMenu("File");
         fileMenu.getAccessibleContext().setAccessibleDescription("File menu");
-        fileMenu.add(new JMenuItem("Exit"));
+        menuItem = new JMenuItem("Exit");
+        fileMenu.add(menuItem);
         menuBar.add(fileMenu);
         helpMenu = new JMenu("Help");
         fileMenu.getAccessibleContext().setAccessibleDescription("Help menu");
-        helpMenu.add(new JMenuItem("About"));
+        menuItem = new JMenuItem("About");
+        menuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                AboutDialog about = new AboutDialog(frame);
+                about.setVisible(true);
+            }
+        });
+        helpMenu.add(menuItem);
         menuBar.add(helpMenu);
     }
 

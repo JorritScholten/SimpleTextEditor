@@ -5,33 +5,45 @@ import java.awt.*;
 
 public class MainWindow {
     /**
+     * JPanel used as top-level container of UI components
+     */
+    private final JPanel rootPanel;
+    /**
+     * JToolBar that sits at the bottom of window to show file info
+     */
+    private final JToolBar bottomToolBar;
+    /**
+     * JScrollPane to allow editor to scroll
+     */
+    private final JScrollPane scrollPane;
+    /**
+     * JPanel to contain the multiple JEditorPanes next to each other
+     */
+    private final JPanel editorPanel;
+    /**
+     * JEditorPane where the actual text editing takes place
+     */
+    private final JEditorPane inputPane;
+    /**
+     * Menu bar at the top of the window
+     */
+    private final JMenuBar menuBar;
+    /**
+     * Menu with file options
+     */
+    private final JMenu fileMenu;
+    /**
+     * Menu with help options
+     */
+    private final JMenu helpMenu;
+    /**
      * JFrame containing the top-level window
      */
     private JFrame frame;
     /**
-     * JPanel used as top-level container of UI components
-     */
-    private JPanel rootPanel;
-    /**
-     * JToolBar that sits at the bottom of window to show file info
-     */
-    private JToolBar bottomToolBar;
-    /**
-     * JScrollPane to allow editor to scroll
-     */
-    private JScrollPane scrollPane;
-    /**
-     * JPanel to contain the multiple JEditorPanes next to each other
-     */
-    private JPanel editorPanel;
-    /**
      * View-only pane to render the line numbers
      */
     private JEditorPane lineNumberPane;
-    /**
-     * JEditorPane where the actual text editing takes place
-     */
-    private JEditorPane inputPane;
 
     public MainWindow() {
         rootPanel = new JPanel(new BorderLayout());
@@ -51,6 +63,16 @@ public class MainWindow {
 
         rootPanel.add(scrollPane, BorderLayout.CENTER);
         rootPanel.add(bottomToolBar, BorderLayout.PAGE_END);
+
+        menuBar = new JMenuBar();
+        fileMenu = new JMenu("File");
+        fileMenu.getAccessibleContext().setAccessibleDescription("File menu");
+        fileMenu.add(new JMenuItem("Exit"));
+        menuBar.add(fileMenu);
+        helpMenu = new JMenu("Help");
+        fileMenu.getAccessibleContext().setAccessibleDescription("Help menu");
+        helpMenu.add(new JMenuItem("About"));
+        menuBar.add(helpMenu);
     }
 
     /**
@@ -61,6 +83,7 @@ public class MainWindow {
     public void run(String title) {
         frame = new JFrame(title);
         frame.setContentPane(rootPanel);
+        frame.setJMenuBar(menuBar);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);

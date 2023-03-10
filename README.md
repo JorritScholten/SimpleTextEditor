@@ -6,7 +6,7 @@ The goal of this project is to learn Java by creating a text editor with a Swing
 
 - [x] Simple window with text pane
 - [ ] Add menu toolbar to window
-    - [ ] Create menu toolbar
+    - [x] Create menu toolbar
     - [ ] Create *Help* menu
         - [ ] Add *About* dialog
     - [ ] Create *File* menu

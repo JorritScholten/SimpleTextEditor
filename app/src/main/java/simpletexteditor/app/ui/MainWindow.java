@@ -89,7 +89,7 @@ public class MainWindow {
         fileMenu.add(menuItem);
         menuBar.add(fileMenu);
         helpMenu = new JMenu("Help");
-        fileMenu.getAccessibleContext().setAccessibleDescription("Help menu");
+        helpMenu.getAccessibleContext().setAccessibleDescription("Help menu");
         menuItem = new JMenuItem("About");
         menuItem.addActionListener(new ActionListener() {
             @Override

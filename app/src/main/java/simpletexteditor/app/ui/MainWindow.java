@@ -1,5 +1,7 @@
 package simpletexteditor.app.ui;
 
+import simpletexteditor.app.ui.dialog.AboutDialog;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;

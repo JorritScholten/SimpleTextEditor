@@ -1,4 +1,4 @@
-package simpletexteditor.app.ui;
+package simpletexteditor.app.ui.dialog;
 
 import javax.swing.*;
 import java.awt.*;
@@ -7,7 +7,7 @@ import java.awt.event.*;
 /**
  * Dialog which displays information about project.
  */
-class AboutDialog extends JDialog {
+public class AboutDialog extends JDialog {
     private final String aboutText = "<html style=\"text-align:center;\">" +
             "This is a simple text editor with a Swing UI using Gradle as a build system.<br>" +
             "The goal of this project learn Java UI development.<br>" +

@@ -70,6 +70,15 @@ public class MainWindow {
         JMenuItem menuItem;
         fileMenu = new JMenu("File");
         fileMenu.getAccessibleContext().setAccessibleDescription("File menu");
+        menuItem = new JMenuItem("New");
+        menuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                inputPane.setText("");
+            }
+        });
+        fileMenu.add(menuItem);
+        fileMenu.addSeparator();
         menuItem = new JMenuItem("Exit");
         menuItem.addActionListener(new ActionListener() {
             @Override

@@ -5,7 +5,7 @@ import java.awt.*;
 import java.awt.event.*;
 
 /**
- * Dialog which displays information about project.
+ * Dialog which displays information about project
  */
 class AboutDialog extends JDialog {
     private final String aboutText = "<html style=\"text-align:center;\">" +
@@ -20,9 +20,9 @@ class AboutDialog extends JDialog {
     private JTextPane aboutTextPane;
 
     /**
-     * Creates dialog displaying information about project.
+     * Creates dialog displaying information about project
      *
-     * @param owner Reference to parent frame needed so that it can be locked.
+     * @param owner Reference to parent frame needed so that parent can be locked
      */
     public AboutDialog(Frame owner) {
         super(owner, "About", ModalityType.APPLICATION_MODAL);

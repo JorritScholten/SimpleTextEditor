@@ -117,7 +117,7 @@ public class MainWindow {
     }
 
     /**
-     * Try to close window, checks for unsaved changes and aborts if necessary.
+     * Try to close window, checks for unsaved changes and aborts if necessary
      */
     private void exit() {
         // TODO: add checks for unsaved changes and such.

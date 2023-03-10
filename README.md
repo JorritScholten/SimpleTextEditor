@@ -14,7 +14,7 @@ The goal of this project is to learn Java by creating a text editor with a Swing
     - [x] Add *Exit* item
 - [ ] Restructure *app.ui* package so that MainWindow doesn't look like an endless list of declarations
   - [x] put JMenu items in new package and make each menu its own class
-    - [ ] move menuBar definition to new class in menu package
+    - [x] move menuBar definition to new class in menu package
   - [x] create package for dialogs
   - [ ] create package for panels and make each area of the ui its own class
 - [ ] File save functionality

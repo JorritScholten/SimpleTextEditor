@@ -1,8 +1,7 @@
 package simpletexteditor.app.ui;
 
 import simpletexteditor.app.ui.dialog.AboutDialog;
-import simpletexteditor.app.ui.menu.FileMenu;
-import simpletexteditor.app.ui.menu.HelpMenu;
+import simpletexteditor.app.ui.menu.MenuBar;
 
 import javax.swing.*;
 import java.awt.*;
@@ -33,15 +32,7 @@ public class MainWindow implements ActionListener {
     /**
      * Menu bar at the top of the window
      */
-    private final JMenuBar menuBar;
-    /**
-     * Menu with file options
-     */
-    private final FileMenu fileMenu;
-    /**
-     * Menu with help options
-     */
-    private final HelpMenu helpMenu;
+    private final MenuBar menuBar;
     /**
      * JFrame containing the top-level window
      */
@@ -70,11 +61,7 @@ public class MainWindow implements ActionListener {
         rootPanel.add(scrollPane, BorderLayout.CENTER);
         rootPanel.add(bottomToolBar, BorderLayout.PAGE_END);
 
-        menuBar = new JMenuBar();
-        fileMenu = new FileMenu(this);
-        menuBar.add(fileMenu);
-        helpMenu = new HelpMenu(this);
-        menuBar.add(helpMenu);
+        menuBar = new MenuBar(this);
     }
 
     /**
@@ -105,11 +92,11 @@ public class MainWindow implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
-        if (source == fileMenu.newItem) {
+        if (source == menuBar.fileMenu.newItem) {
             inputPane.setText("");
-        } else if (source == fileMenu.exitItem) {
+        } else if (source == menuBar.fileMenu.exitItem) {
             exit();
-        } else if (source == helpMenu.aboutItem) {
+        } else if (source == menuBar.helpMenu.aboutItem) {
             AboutDialog about = new AboutDialog(frame);
             about.setVisible(true);
         }

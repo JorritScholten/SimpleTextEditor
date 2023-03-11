@@ -1,43 +1,26 @@
 package simpletexteditor.app.ui;
 
+import simpletexteditor.app.ui.dialog.AboutDialog;
+import simpletexteditor.app.ui.menu.MenuBar;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class MainWindow {
+public class MainWindow implements ActionListener {
     /**
      * JPanel used as top-level container of UI components
      */
     private final JPanel rootPanel;
     /**
-     * JToolBar that sits at the bottom of window to show file info
+     * JSrollPane containing the text editor
      */
-    private final JToolBar bottomToolBar;
-    /**
-     * JScrollPane to allow editor to scroll
-     */
-    private final JScrollPane scrollPane;
-    /**
-     * JPanel to contain the multiple JEditorPanes next to each other
-     */
-    private final JPanel editorPanel;
-    /**
-     * JEditorPane where the actual text editing takes place
-     */
-    private final JEditorPane inputPane;
+    private final EditorPane editorPane;
     /**
      * Menu bar at the top of the window
      */
-    private final JMenuBar menuBar;
-    /**
-     * Menu with file options
-     */
-    private final JMenu fileMenu;
-    /**
-     * Menu with help options
-     */
-    private final JMenu helpMenu;
+    private final MenuBar menuBar;
     /**
      * JFrame containing the top-level window
      */
@@ -52,54 +35,10 @@ public class MainWindow {
         rootPanel.setPreferredSize(new Dimension(400, 400));
         rootPanel.setMinimumSize(new Dimension(200, 200));
 
-        bottomToolBar = new JToolBar("Document information", SwingConstants.HORIZONTAL);
-        bottomToolBar.setFloatable(false);
-        JLabel testLabel = new JLabel("No document open");
-        bottomToolBar.add(testLabel);
+        editorPane = new EditorPane(this);
+        rootPanel.add(editorPane, BorderLayout.CENTER);
 
-        inputPane = new JEditorPane("text/plain", null);
-        LayoutManager editorLayout = new BorderLayout(0, 0);
-        editorPanel = new JPanel(editorLayout);
-        editorPanel.add(inputPane, BorderLayout.CENTER);
-        scrollPane = new JScrollPane(editorPanel);
-
-        rootPanel.add(scrollPane, BorderLayout.CENTER);
-        rootPanel.add(bottomToolBar, BorderLayout.PAGE_END);
-
-        menuBar = new JMenuBar();
-        JMenuItem menuItem;
-        fileMenu = new JMenu("File");
-        fileMenu.getAccessibleContext().setAccessibleDescription("File menu");
-        menuItem = new JMenuItem("New");
-        menuItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                inputPane.setText("");
-            }
-        });
-        fileMenu.add(menuItem);
-        fileMenu.addSeparator();
-        menuItem = new JMenuItem("Exit");
-        menuItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                exit();
-            }
-        });
-        fileMenu.add(menuItem);
-        menuBar.add(fileMenu);
-        helpMenu = new JMenu("Help");
-        helpMenu.getAccessibleContext().setAccessibleDescription("Help menu");
-        menuItem = new JMenuItem("About");
-        menuItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                AboutDialog about = new AboutDialog(frame);
-                about.setVisible(true);
-            }
-        });
-        helpMenu.add(menuItem);
-        menuBar.add(helpMenu);
+        menuBar = new MenuBar(this);
     }
 
     /**
@@ -122,5 +61,21 @@ public class MainWindow {
     private void exit() {
         // TODO: add checks for unsaved changes and such.
         frame.dispose();
+    }
+
+    /**
+     * Invoked when the UI is interacted with.
+     */
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        Object source = e.getSource();
+        if (source == menuBar.fileMenu.newItem) {
+            editorPane.inputPane.setText("");
+        } else if (source == menuBar.fileMenu.exitItem) {
+            exit();
+        } else if (source == menuBar.helpMenu.aboutItem) {
+            AboutDialog about = new AboutDialog(frame);
+            about.setVisible(true);
+        }
     }
 }

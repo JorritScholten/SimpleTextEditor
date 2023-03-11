@@ -1,6 +1,7 @@
 package simpletexteditor.app.ui;
 
 import simpletexteditor.app.ui.dialog.AboutDialog;
+import simpletexteditor.app.ui.dialog.OpenDialog;
 import simpletexteditor.app.ui.menu.MenuBar;
 
 import javax.swing.*;
@@ -71,6 +72,9 @@ public class MainWindow implements ActionListener {
         Object source = e.getSource();
         if (source == menuBar.fileMenu.newItem) {
             editorPane.inputPane.setText("");
+        } else if (source == menuBar.fileMenu.openItem) {
+            OpenDialog open = new OpenDialog(frame, this);
+            open.setVisible(true);
         } else if (source == menuBar.fileMenu.exitItem) {
             exit();
         } else if (source == menuBar.helpMenu.aboutItem) {

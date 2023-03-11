@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
  */
 public class FileMenu extends JMenu {
     public JMenuItem newItem;
+    public JMenuItem openItem;
     public JMenuItem exitItem;
 
     /**
@@ -23,6 +24,10 @@ public class FileMenu extends JMenu {
         newItem = new JMenuItem("New");
         newItem.addActionListener(listener);
         add(newItem);
+
+        openItem = new JMenuItem("Open");
+        openItem.addActionListener(listener);
+        add(openItem);
         addSeparator();
 
         exitItem = new JMenuItem("Exit");

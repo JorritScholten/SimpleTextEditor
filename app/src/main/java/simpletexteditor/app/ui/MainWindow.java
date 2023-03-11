@@ -80,6 +80,8 @@ public class MainWindow implements ActionListener {
         } else if (source == menuBar.helpMenu.aboutItem) {
             AboutDialog about = new AboutDialog(frame);
             about.setVisible(true);
+        } else {
+            System.out.println("other source");
         }
     }
 }

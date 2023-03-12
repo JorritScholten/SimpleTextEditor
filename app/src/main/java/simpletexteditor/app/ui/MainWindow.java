@@ -85,6 +85,27 @@ public class MainWindow implements ActionListener {
     }
 
     /**
+     * Creates a save file chooser dialog and handles saving the document
+     */
+    private void createSaveDialog() {
+        JFileChooser fileChooser = new FileChooser();
+        fileChooser.setDialogTitle("Save file");
+        int state = fileChooser.showSaveDialog(frame);
+//        add checks to see if file already exists
+        switch (state) {
+            case JFileChooser.CANCEL_OPTION:
+                System.out.println("pressed cancel");
+                break;
+            case JFileChooser.APPROVE_OPTION:
+                System.out.println("Saving file to:" + fileChooser.getSelectedFile());
+                break;
+            default:
+            case JFileChooser.ERROR_OPTION:
+                System.out.println("dialog dismissed");
+        }
+    }
+
+    /**
      * Invoked when the UI is interacted with
      */
     @Override
@@ -94,6 +115,8 @@ public class MainWindow implements ActionListener {
             editorPane.inputPane.setText("");
         } else if (source == menuBar.fileMenu.openItem) {
             createOpenDialog();
+        } else if (source == menuBar.fileMenu.saveItem) {
+            createSaveDialog();
         } else if (source == menuBar.fileMenu.exitItem) {
             exit();
         } else if (source == menuBar.helpMenu.aboutItem) {

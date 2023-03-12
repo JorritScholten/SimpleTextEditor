@@ -1,7 +1,6 @@
 package simpletexteditor.app.ui;
 
 import simpletexteditor.app.ui.dialog.AboutDialog;
-import simpletexteditor.app.ui.dialog.OpenDialog;
 import simpletexteditor.app.ui.menu.MenuBar;
 
 import javax.swing.*;
@@ -64,6 +63,25 @@ public class MainWindow implements ActionListener {
         frame.dispose();
     }
 
+    private void createOpenDialog() {
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Open file");
+        // prevent file chooser window from getting too small
+        fileChooser.setMinimumSize(fileChooser.getSize()); //doesn't work, need to extend JFileChooser class
+        int state = fileChooser.showOpenDialog(frame);
+        switch (state) {
+            case JFileChooser.CANCEL_OPTION:
+                System.out.println("pressed cancel");
+                break;
+            case JFileChooser.APPROVE_OPTION:
+                System.out.println("Open:" + fileChooser.getSelectedFile());
+                break;
+            default:
+            case JFileChooser.ERROR_OPTION:
+                System.out.println("dialog dismissed");
+        }
+    }
+
     /**
      * Invoked when the UI is interacted with.
      */
@@ -73,8 +91,9 @@ public class MainWindow implements ActionListener {
         if (source == menuBar.fileMenu.newItem) {
             editorPane.inputPane.setText("");
         } else if (source == menuBar.fileMenu.openItem) {
-            OpenDialog open = new OpenDialog(frame, this);
-            open.setVisible(true);
+//            OpenDialog open = new OpenDialog(frame, this);
+//            open.setVisible(true);
+            createOpenDialog();
         } else if (source == menuBar.fileMenu.exitItem) {
             exit();
         } else if (source == menuBar.helpMenu.aboutItem) {

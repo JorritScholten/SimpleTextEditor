@@ -34,6 +34,7 @@ public class OpenDialog extends JDialog {
         contentPane.add(fileChooser, BorderLayout.CENTER);
         setContentPane(contentPane);
         pack();
+        // prevent file chooser window from getting too small
         setMinimumSize(getSize());
     }
 }

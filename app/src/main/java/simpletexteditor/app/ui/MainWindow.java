@@ -8,6 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 
 public class MainWindow implements ActionListener {
     /**
@@ -87,8 +88,8 @@ public class MainWindow implements ActionListener {
     /**
      * Creates a save file chooser dialog and handles saving the document
      */
-    private void createSaveDialog() {
-        JFileChooser fileChooser = new FileChooser();
+    private void createSaveDialog(File file) {
+        JFileChooser fileChooser = new FileChooser(file);
         fileChooser.setDialogTitle("Save file");
         int state = fileChooser.showSaveDialog(frame);
 //        add checks to see if file already exists
@@ -98,6 +99,7 @@ public class MainWindow implements ActionListener {
                 break;
             case JFileChooser.APPROVE_OPTION:
                 System.out.println("Saving file to:" + fileChooser.getSelectedFile());
+                // check selected file here, if already exists recursively call self
                 break;
             default:
             case JFileChooser.ERROR_OPTION:
@@ -116,7 +118,7 @@ public class MainWindow implements ActionListener {
         } else if (source == menuBar.fileMenu.openItem) {
             createOpenDialog();
         } else if (source == menuBar.fileMenu.saveItem) {
-            createSaveDialog();
+            createSaveDialog(null);
         } else if (source == menuBar.fileMenu.exitItem) {
             exit();
         } else if (source == menuBar.helpMenu.aboutItem) {

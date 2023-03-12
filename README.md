@@ -20,7 +20,7 @@ The goal of this project is to learn Java by creating a text editor with a Swing
 - [ ] Implement file save & open functionality
   - [ ] Create some sort of document class to hold EditorPane contents
   - [ ] File save functionality
-    - [ ] Add item to *File* menu
+    - [x] Add item to *File* menu
     - [ ] Create file picker dialog
     - [ ] Make dialog functional
   - [ ] File open functionality

@@ -1,6 +1,7 @@
 package simpletexteditor.app.ui;
 
 import simpletexteditor.app.ui.dialog.AboutDialog;
+import simpletexteditor.app.ui.dialog.FileChooser;
 import simpletexteditor.app.ui.menu.MenuBar;
 
 import javax.swing.*;
@@ -63,11 +64,12 @@ public class MainWindow implements ActionListener {
         frame.dispose();
     }
 
+    /**
+     * Creates an open file chooser dialog and handles instantiating the new document
+     */
     private void createOpenDialog() {
-        JFileChooser fileChooser = new JFileChooser();
+        JFileChooser fileChooser = new FileChooser();
         fileChooser.setDialogTitle("Open file");
-        // prevent file chooser window from getting too small
-        fileChooser.setMinimumSize(fileChooser.getSize()); //doesn't work, need to extend JFileChooser class
         int state = fileChooser.showOpenDialog(frame);
         switch (state) {
             case JFileChooser.CANCEL_OPTION:
@@ -83,7 +85,7 @@ public class MainWindow implements ActionListener {
     }
 
     /**
-     * Invoked when the UI is interacted with.
+     * Invoked when the UI is interacted with
      */
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -91,8 +93,6 @@ public class MainWindow implements ActionListener {
         if (source == menuBar.fileMenu.newItem) {
             editorPane.inputPane.setText("");
         } else if (source == menuBar.fileMenu.openItem) {
-//            OpenDialog open = new OpenDialog(frame, this);
-//            open.setVisible(true);
             createOpenDialog();
         } else if (source == menuBar.fileMenu.exitItem) {
             exit();

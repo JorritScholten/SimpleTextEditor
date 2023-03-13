@@ -39,6 +39,8 @@ public class AboutDialog extends JDialog {
         setModal(true);
         getRootPane().setDefaultButton(closeButton);
         pack();
+        setResizable(false);
+        setLocationRelativeTo(owner);
 
         // call dispose() when button is clicked
         closeButton.addActionListener(new ActionListener() {

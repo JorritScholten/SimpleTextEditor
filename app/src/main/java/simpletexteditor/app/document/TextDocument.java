@@ -31,7 +31,6 @@ public class TextDocument {
      * ActionListener of parent class so that events may be passed up the hierarchy
      */
     private ActionListener actionListener;
-
     /**
      * Construct empty TextDocument class
      */
@@ -69,12 +68,40 @@ public class TextDocument {
         modified = false;
     }
 
+    /**
+     * Saves document to new file, this changes this.file
+     *
+     * @param file a File object specifying the text document to write to
+     */
+    public void saveAs(File file) {
+        //TODO: implement safety checks of file
+        save();
+    }
+
+    /**
+     * Saves document to file, throws exception when file == null
+     */
+    public void save() throws NullPointerException {
+        if (file == null)
+            throw new NullPointerException("file is undefined, call saveAs() instead.");
+        //TODO: implement file saving
+        documentModified(false);
+    }
+
+    public File getFile() {
+        return file;
+    }
+
     public String getName() {
         return name;
     }
 
     public boolean isModified() {
         return modified;
+    }
+
+    public boolean isUnsaved() {
+        return file == null;
     }
 
     protected void documentModified(boolean isModified) {

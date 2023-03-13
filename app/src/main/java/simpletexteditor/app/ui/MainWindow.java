@@ -67,6 +67,9 @@ public class MainWindow implements ActionListener {
      */
     private void exit() {
         // TODO: add checks for unsaved changes and such.
+        if (textDocument.isModified() | textDocument.isUnsaved()) {
+            //TODO: prompt user to save document
+        }
         frame.dispose();
     }
 
@@ -140,13 +143,21 @@ public class MainWindow implements ActionListener {
         Object source = e.getSource();
         if (source == menuBar.fileMenu.newItem) {
             // TODO: add safety checks
+            if (textDocument.isModified() | textDocument.isUnsaved()) {
+                //TODO: prompt user to save document
+            }
             textDocument = new TextDocument(this);
             editorPane.inputPane.setStyledDocument(textDocument.document);
             frame.setTitle(textDocument.getName());
         } else if (source == menuBar.fileMenu.openItem) {
             createOpenDialog();
+        } else if (source == menuBar.fileMenu.saveItem) {
+            if (textDocument.isUnsaved())
+                createSaveDialog(null);
+            else
+                textDocument.save();
         } else if (source == menuBar.fileMenu.saveAsItem) {
-            createSaveDialog(null);
+            createSaveDialog(textDocument.getFile());
         } else if (source == menuBar.fileMenu.exitItem) {
             exit();
         } else if (source == menuBar.helpMenu.aboutItem) {

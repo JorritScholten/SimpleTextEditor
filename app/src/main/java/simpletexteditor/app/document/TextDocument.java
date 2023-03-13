@@ -78,8 +78,11 @@ public class TextDocument {
     }
 
     protected void documentModified(boolean isModified) {
-        modified = isModified;
-        actionListener.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, (String) null));
+        // only fire event if there is a change
+        if (modified != isModified) {
+            modified = isModified;
+            actionListener.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, (String) null));
+        }
     }
 
     //This one listens for any changes to the document.

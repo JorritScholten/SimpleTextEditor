@@ -31,6 +31,7 @@ public class TextDocument {
      * ActionListener of parent class so that events may be passed up the hierarchy
      */
     private ActionListener actionListener;
+
     /**
      * Construct empty TextDocument class
      */
@@ -73,9 +74,14 @@ public class TextDocument {
      *
      * @param file a File object specifying the text document to write to
      */
-    public void saveAs(File file) {
-        //TODO: implement safety checks of file
+    public void saveAs(File file) throws IOException {
+        if (file.isDirectory())
+            throw new IOException(file.getAbsolutePath() + " needs to be a file, not a directory.");
+        if (file.exists() & !file.canWrite())
+            throw new AccessDeniedException(file.getAbsolutePath());
+        this.file = new File(file.getAbsolutePath());
         save();
+        name = this.file.getName();
     }
 
     /**

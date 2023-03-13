@@ -1,6 +1,7 @@
 package simpletexteditor.app.ui;
 
 import javax.swing.*;
+import javax.swing.text.DefaultStyledDocument;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
@@ -28,8 +29,8 @@ class EditorPane extends JScrollPane {
     /**
      * Constructs a JScrollPane containing
      */
-    public EditorPane(ActionListener listener) {
-        inputPane = new JTextPane();
+    public EditorPane(ActionListener listener, DefaultStyledDocument document) {
+        inputPane = new JTextPane(document);
         editorLayout = new BorderLayout(0, 0);
         editorPanel = new JPanel(editorLayout);
         editorPanel.add(inputPane, BorderLayout.CENTER);

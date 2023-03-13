@@ -1,20 +1,19 @@
 package simpletexteditor.app.ui;
 
+import simpletexteditor.app.document.TextDocument;
 import simpletexteditor.app.ui.dialog.AboutDialog;
 import simpletexteditor.app.ui.dialog.FileChooser;
 import simpletexteditor.app.ui.menu.MenuBar;
 
 import javax.swing.*;
-import javax.swing.text.AbstractDocument;
-import javax.swing.text.BadLocationException;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.FileReader;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Scanner;
+import java.nio.file.AccessDeniedException;
 
 public class MainWindow implements ActionListener {
     /**
@@ -33,17 +32,16 @@ public class MainWindow implements ActionListener {
      * JFrame containing the top-level window
      */
     private JFrame frame;
-    /**
-     * View-only pane to render the line numbers
-     */
-    private JEditorPane lineNumberPane;
+    private TextDocument textDocument;
 
     public MainWindow() {
         rootPanel = new JPanel(new BorderLayout());
         rootPanel.setPreferredSize(new Dimension(400, 400));
         rootPanel.setMinimumSize(new Dimension(200, 200));
 
-        editorPane = new EditorPane(this);
+        textDocument = new TextDocument(this);
+
+        editorPane = new EditorPane(this, textDocument.document);
         rootPanel.add(editorPane, BorderLayout.CENTER);
 
         menuBar = new MenuBar(this);
@@ -55,7 +53,7 @@ public class MainWindow implements ActionListener {
      * @param title Window title
      */
     public void run(String title) {
-        frame = new JFrame(title);
+        frame = new JFrame(textDocument.getName());
         frame.setContentPane(rootPanel);
         frame.setJMenuBar(menuBar);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -85,18 +83,9 @@ public class MainWindow implements ActionListener {
                 break;
             case JFileChooser.APPROVE_OPTION:
                 try {
-                    File f = new File(fileChooser.getSelectedFile().getAbsolutePath());
-                    System.out.println("Opening:" + f);
-                    FileReader in = new FileReader(f);
-                    Scanner scanner = new Scanner(in);
-                    while (scanner.hasNextLine()) {
-                        AbstractDocument doc = (AbstractDocument) editorPane.inputPane.getStyledDocument();
-                        doc.insertString(doc.getLength(), scanner.nextLine() + "\n", null);
-                    }
-                    in.close();
-                    frame.setTitle(f.getName());
-                } catch (IOException | BadLocationException ex) {
-                    JOptionPane.showMessageDialog(frame, "Error: " + ex.getMessage());
+                    textDocument.openFile(fileChooser.getSelectedFile());
+                } catch (FileNotFoundException | AccessDeniedException ex) {
+                    JOptionPane.showMessageDialog(frame, ex.getMessage(), ex.toString(), JOptionPane.ERROR_MESSAGE);
                 }
                 break;
             default:
@@ -118,16 +107,21 @@ public class MainWindow implements ActionListener {
                 System.out.println("pressed cancel");
                 break;
             case JFileChooser.APPROVE_OPTION:
-                try {
-                    File f = new File(fileChooser.getSelectedFile().getAbsolutePath());
-                    System.out.println("Saving file to:" + f);
-                    // TODO: check selected file here, if already exists recursively call self
-                    FileWriter out = new FileWriter(f);
-                    out.write(editorPane.inputPane.getText());
-                    out.close();
-                    frame.setTitle(f.getName());
-                } catch (IOException ex) {
-                    JOptionPane.showMessageDialog(frame, "Error: " + ex.getMessage());
+                File f = new File(fileChooser.getSelectedFile().getAbsolutePath());
+                // TODO: check selected file here, if already exists recursively call self
+                if (f.exists()) {
+                    JOptionPane.showMessageDialog(frame, "File already exists, please choose different name.");
+                    createSaveDialog(f);
+                } else {
+                    try {
+                        System.out.println("Saving file to:" + f);
+                        FileWriter out = new FileWriter(f);
+                        out.write(editorPane.inputPane.getText());
+                        out.close();
+                        frame.setTitle(f.getName());
+                    } catch (IOException ex) {
+                        JOptionPane.showMessageDialog(frame, "Error: " + ex.getMessage());
+                    }
                 }
                 break;
             default:
@@ -145,6 +139,7 @@ public class MainWindow implements ActionListener {
         if (source == menuBar.fileMenu.newItem) {
             editorPane.inputPane.setText("");
             frame.setTitle("Untitled");
+//            textDocument.
         } else if (source == menuBar.fileMenu.openItem) {
             createOpenDialog();
         } else if (source == menuBar.fileMenu.saveAsItem) {
@@ -154,6 +149,11 @@ public class MainWindow implements ActionListener {
         } else if (source == menuBar.helpMenu.aboutItem) {
             AboutDialog about = new AboutDialog(frame);
             about.setVisible(true);
+        } else if (source == textDocument) {
+            if (textDocument.isModified())
+                frame.setTitle(textDocument.getName() + "*");
+            else
+                frame.setTitle(textDocument.getName());
         } else {
             System.out.println("other source");
         }

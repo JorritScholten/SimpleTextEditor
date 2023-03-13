@@ -83,7 +83,9 @@ public class MainWindow implements ActionListener {
                 break;
             case JFileChooser.APPROVE_OPTION:
                 try {
-                    textDocument.openFile(fileChooser.getSelectedFile());
+                    textDocument = new TextDocument(this, fileChooser.getSelectedFile());
+                    editorPane.inputPane.setStyledDocument(textDocument.document);
+                    frame.setTitle(textDocument.getName());
                 } catch (FileNotFoundException | AccessDeniedException ex) {
                     JOptionPane.showMessageDialog(frame, ex.getMessage(), ex.toString(), JOptionPane.ERROR_MESSAGE);
                 }
@@ -137,9 +139,10 @@ public class MainWindow implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
         if (source == menuBar.fileMenu.newItem) {
-            editorPane.inputPane.setText("");
-            frame.setTitle("Untitled");
-//            textDocument.
+            // TODO: add safety checks
+            textDocument = new TextDocument(this);
+            editorPane.inputPane.setStyledDocument(textDocument.document);
+            frame.setTitle(textDocument.getName());
         } else if (source == menuBar.fileMenu.openItem) {
             createOpenDialog();
         } else if (source == menuBar.fileMenu.saveAsItem) {

@@ -5,10 +5,16 @@ import simpletexteditor.app.ui.dialog.FileChooser;
 import simpletexteditor.app.ui.menu.MenuBar;
 
 import javax.swing.*;
+import javax.swing.text.AbstractDocument;
+import javax.swing.text.BadLocationException;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Scanner;
 
 public class MainWindow implements ActionListener {
     /**
@@ -54,6 +60,7 @@ public class MainWindow implements ActionListener {
         frame.setJMenuBar(menuBar);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
+        frame.setMinimumSize(frame.getSize());
         frame.setVisible(true);
     }
 
@@ -77,7 +84,20 @@ public class MainWindow implements ActionListener {
                 System.out.println("pressed cancel");
                 break;
             case JFileChooser.APPROVE_OPTION:
-                System.out.println("Open:" + fileChooser.getSelectedFile());
+                try {
+                    File f = new File(fileChooser.getSelectedFile().getAbsolutePath());
+                    System.out.println("Opening:" + f);
+                    FileReader in = new FileReader(f);
+                    Scanner scanner = new Scanner(in);
+                    while (scanner.hasNextLine()) {
+                        AbstractDocument doc = (AbstractDocument) editorPane.inputPane.getStyledDocument();
+                        doc.insertString(doc.getLength(), scanner.nextLine() + "\n", null);
+                    }
+                    in.close();
+                    frame.setTitle(f.getName());
+                } catch (IOException | BadLocationException ex) {
+                    JOptionPane.showMessageDialog(frame, "Error: " + ex.getMessage());
+                }
                 break;
             default:
             case JFileChooser.ERROR_OPTION:
@@ -98,8 +118,17 @@ public class MainWindow implements ActionListener {
                 System.out.println("pressed cancel");
                 break;
             case JFileChooser.APPROVE_OPTION:
-                System.out.println("Saving file to:" + fileChooser.getSelectedFile());
-                // check selected file here, if already exists recursively call self
+                try {
+                    File f = new File(fileChooser.getSelectedFile().getAbsolutePath());
+                    System.out.println("Saving file to:" + f);
+                    // TODO: check selected file here, if already exists recursively call self
+                    FileWriter out = new FileWriter(f);
+                    out.write(editorPane.inputPane.getText());
+                    out.close();
+                    frame.setTitle(f.getName());
+                } catch (IOException ex) {
+                    JOptionPane.showMessageDialog(frame, "Error: " + ex.getMessage());
+                }
                 break;
             default:
             case JFileChooser.ERROR_OPTION:
@@ -115,9 +144,10 @@ public class MainWindow implements ActionListener {
         Object source = e.getSource();
         if (source == menuBar.fileMenu.newItem) {
             editorPane.inputPane.setText("");
+            frame.setTitle("Untitled");
         } else if (source == menuBar.fileMenu.openItem) {
             createOpenDialog();
-        } else if (source == menuBar.fileMenu.saveItem) {
+        } else if (source == menuBar.fileMenu.saveAsItem) {
             createSaveDialog(null);
         } else if (source == menuBar.fileMenu.exitItem) {
             exit();

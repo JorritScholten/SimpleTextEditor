@@ -19,6 +19,6 @@ public class App {
         System.out.println(WordUtils.capitalize(result));
 
         MainWindow window = new MainWindow();
-        window.run("test");
+        window.run("Untitled");
     }
 }

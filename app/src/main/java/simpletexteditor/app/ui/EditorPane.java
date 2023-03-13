@@ -9,9 +9,9 @@ import java.awt.event.ActionListener;
  */
 class EditorPane extends JScrollPane {
     /**
-     * JEditorPane where the actual text editing takes place
+     * JTextPane where the actual text editing takes place
      */
-    public final JEditorPane inputPane;
+    public final JTextPane inputPane;
     /**
      * JPanel to contain the multiple JEditorPanes next to each other
      */
@@ -29,7 +29,7 @@ class EditorPane extends JScrollPane {
      * Constructs a JScrollPane containing
      */
     public EditorPane(ActionListener listener) {
-        inputPane = new JEditorPane("text/plain", null);
+        inputPane = new JTextPane();
         editorLayout = new BorderLayout(0, 0);
         editorPanel = new JPanel(editorLayout);
         editorPanel.add(inputPane, BorderLayout.CENTER);

@@ -11,7 +11,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.AccessDeniedException;
 
@@ -106,32 +105,41 @@ public class MainWindow implements ActionListener {
         JFileChooser fileChooser = new FileChooser(file);
         fileChooser.setDialogTitle("Save file");
         int state = fileChooser.showSaveDialog(frame);
-//        add checks to see if file already exists
-        switch (state) {
-            case JFileChooser.CANCEL_OPTION:
-                System.out.println("pressed cancel");
-                break;
-            case JFileChooser.APPROVE_OPTION:
-                File f = new File(fileChooser.getSelectedFile().getAbsolutePath());
-                // TODO check selected file here, if already exists recursively call self
-                if (f.exists()) {
-                    JOptionPane.showMessageDialog(frame, "File already exists, please choose different name.");
-                    createSaveDialog(f);
-                } else {
-                    try {
-                        System.out.println("Saving file to:" + f);
-                        FileWriter out = new FileWriter(f);
-                        out.write(editorPane.inputPane.getText());
-                        out.close();
-                        frame.setTitle(f.getName());
-                    } catch (IOException ex) {
-                        JOptionPane.showMessageDialog(frame, "Error: " + ex.getMessage());
-                    }
+        if (state == JFileChooser.APPROVE_OPTION) {
+            File f = new File(fileChooser.getSelectedFile().getAbsolutePath());
+            if (f.exists()) {
+                int choice = JOptionPane.showOptionDialog(frame,
+                        "File already exists, please choose different name.",
+                        "Overwrite file?",
+                        JOptionPane.YES_NO_CANCEL_OPTION,
+                        JOptionPane.WARNING_MESSAGE,
+                        null,
+                        new String[]{"Overwrite", "Save as", "Cancel"},
+                        "Save as");
+                switch (choice) {
+                    case JOptionPane.YES_OPTION:
+                        try {
+                            textDocument.saveAs(f);
+                        } catch (IOException ex) {
+                            JOptionPane.showMessageDialog(frame, ex.getMessage());
+                            createSaveDialog(f);
+                        }
+                        break;
+                    case JOptionPane.NO_OPTION:
+                        createSaveDialog(f);
+                        break;
+                    default:
+                        break;
                 }
-                break;
-            default:
-            case JFileChooser.ERROR_OPTION:
-                System.out.println("dialog dismissed");
+            } else {
+                try {
+                    textDocument.saveAs(f);
+                } catch (IOException ex) {
+                    JOptionPane.showMessageDialog(frame, ex.getMessage());
+                    createSaveDialog(f);
+                }
+            }
+            frame.setTitle(textDocument.getName());
         }
     }
 
@@ -152,11 +160,11 @@ public class MainWindow implements ActionListener {
         } else if (source == menuBar.fileMenu.openItem) {
             createOpenDialog();
         } else if (source == menuBar.fileMenu.saveItem) {
-            // TODO: replace this if statement with a try-catch statement
-            if (textDocument.isUnsaved())
-                createSaveDialog(null);
-            else
+            try {
                 textDocument.save();
+            } catch (NullPointerException ex) {
+                createSaveDialog(null);
+            }
         } else if (source == menuBar.fileMenu.saveAsItem) {
             createSaveDialog(textDocument.getFile());
         } else if (source == menuBar.fileMenu.exitItem) {
@@ -170,7 +178,7 @@ public class MainWindow implements ActionListener {
             else
                 frame.setTitle(textDocument.getName());
         } else {
-            System.out.println("other source");
+//            System.out.println("other source");
         }
     }
 }

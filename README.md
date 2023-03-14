@@ -23,7 +23,7 @@ The goal of this project is to learn Java by creating a text editor with a Swing
     - [x] Add item to *File* menu
     - [x] Create file picker dialog
     - [x] Make dialog functional
-    - [ ] Add checks to see if file already exists
+    - [x] Add checks to see if file already exists
   - [ ] File open functionality
     - [x] Add item to *File* menu
     - [x] create file picker dialog

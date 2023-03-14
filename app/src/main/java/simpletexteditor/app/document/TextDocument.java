@@ -90,7 +90,7 @@ public class TextDocument {
     public void save() throws NullPointerException {
         if (file == null)
             throw new NullPointerException("file is undefined, call saveAs() instead.");
-        //TODO: implement file saving
+        // TODO: implement file saving
         documentModified(false);
     }
 

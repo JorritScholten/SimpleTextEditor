@@ -68,7 +68,7 @@ public class MainWindow implements ActionListener {
     private void exit() {
         // TODO: add checks for unsaved changes and such.
         if (textDocument.isModified() | textDocument.isUnsaved()) {
-            //TODO: prompt user to save document
+            // TODO: prompt user to save document
         }
         frame.dispose();
     }
@@ -113,7 +113,7 @@ public class MainWindow implements ActionListener {
                 break;
             case JFileChooser.APPROVE_OPTION:
                 File f = new File(fileChooser.getSelectedFile().getAbsolutePath());
-                // TODO: check selected file here, if already exists recursively call self
+                // TODO check selected file here, if already exists recursively call self
                 if (f.exists()) {
                     JOptionPane.showMessageDialog(frame, "File already exists, please choose different name.");
                     createSaveDialog(f);
@@ -144,7 +144,7 @@ public class MainWindow implements ActionListener {
         if (source == menuBar.fileMenu.newItem) {
             // TODO: add safety checks
             if (textDocument.isModified() | textDocument.isUnsaved()) {
-                //TODO: prompt user to save document
+                // TODO: prompt user to save document
             }
             textDocument = new TextDocument(this);
             editorPane.inputPane.setStyledDocument(textDocument.document);
@@ -152,6 +152,7 @@ public class MainWindow implements ActionListener {
         } else if (source == menuBar.fileMenu.openItem) {
             createOpenDialog();
         } else if (source == menuBar.fileMenu.saveItem) {
+            // TODO: replace this if statement with a try-catch statement
             if (textDocument.isUnsaved())
                 createSaveDialog(null);
             else

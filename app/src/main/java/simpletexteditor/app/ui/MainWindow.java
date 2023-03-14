@@ -173,9 +173,32 @@ public class MainWindow implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
         if (source == menuBar.fileMenu.newItem) {
-            // TODO: add safety checks
-            if (textDocument.isModified() | textDocument.isUnsaved()) {
-                // TODO: prompt user to save document
+            if (textDocument.isModified() & !textDocument.isUnsaved()) {
+                int choice = JOptionPane.showOptionDialog(frame,
+                        "Create new without saving changes?",
+                        "Unsaved changes",
+                        JOptionPane.YES_NO_CANCEL_OPTION,
+                        JOptionPane.QUESTION_MESSAGE,
+                        null,
+                        new String[]{"Create new", "Save changes", "Cancel"},
+                        "Save changes");
+                switch (choice) {
+                    case JOptionPane.NO_OPTION -> textDocument.save();
+                    case JOptionPane.CANCEL_OPTION -> {
+                        return;
+                    }
+                }
+            } else if (textDocument.isModified() & textDocument.isUnsaved()) {
+                int choice = JOptionPane.showOptionDialog(frame,
+                        "Create new without saving untitled document?",
+                        "Unsaved changes",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE,
+                        null,
+                        new String[]{"Save as", "Create new"},
+                        "Save as");
+                if (choice == JOptionPane.YES_OPTION)
+                    createSaveDialog(null);
             }
             textDocument = new TextDocument(this);
             editorPane.inputPane.setStyledDocument(textDocument.document);

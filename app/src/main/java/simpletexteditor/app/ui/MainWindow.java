@@ -57,7 +57,7 @@ public class MainWindow implements ActionListener, WindowListener {
         frame = new JFrame(textDocument.getName());
         frame.setContentPane(rootPanel);
         frame.setJMenuBar(menuBar);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         frame.addWindowListener(this);
         frame.pack();
         frame.setMinimumSize(frame.getSize());
@@ -68,34 +68,10 @@ public class MainWindow implements ActionListener, WindowListener {
      * Try to close window, checks for unsaved changes and aborts if necessary
      */
     private void exit() {
-        if (textDocument.isModified() & !textDocument.isUnsaved()) {
-            int choice = JOptionPane.showOptionDialog(frame,
-                    "Exit without saving changes?",
-                    "Unsaved changes",
-                    JOptionPane.YES_NO_CANCEL_OPTION,
-                    JOptionPane.QUESTION_MESSAGE,
-                    null,
-                    new String[]{"Exit", "Save changes", "Cancel"},
-                    "Save changes");
-            switch (choice) {
-                case JOptionPane.NO_OPTION -> textDocument.save();
-                case JOptionPane.CANCEL_OPTION -> {
-                    return;
-                }
-            }
-        } else if (textDocument.isModified() & textDocument.isUnsaved()) {
-            int choice = JOptionPane.showOptionDialog(frame,
-                    "Exit without saving untitled document?",
-                    "Unsaved changes",
-                    JOptionPane.YES_NO_OPTION,
-                    JOptionPane.QUESTION_MESSAGE,
-                    null,
-                    new String[]{"Save as", "Exit"},
-                    "Save as");
-            if (choice == JOptionPane.YES_OPTION)
-                createSaveDialog(null);
-        }
+        if (promptUnsavedChanges(promptUnsavedChangesSource.EXIT_PROGRAM))
+            return;
         frame.dispose();
+        System.exit(0);
     }
 
     /**
@@ -170,70 +146,84 @@ public class MainWindow implements ActionListener, WindowListener {
     }
 
     /**
+     * Function prompts user to save unsaved changes if there are any, cannot be called recursively.
+     *
+     * @param calledFrom enum specifying where this function called from so that the prompted messages match the context
+     * @return true if calling method should return immediately without continuing
+     */
+    private boolean promptUnsavedChanges(promptUnsavedChangesSource calledFrom) {
+        String[][] options = null;
+        String[] message = null;
+        String title = "Unsaved changes";
+        switch (calledFrom) {
+            case NEW_FILE:
+                message = new String[]{"Create new without saving changes?",
+                        "Create new without saving untitled document?"};
+                options = new String[][]{{"Create new", "Save changes", "Cancel"},
+                        {"Save as", "Create new", "Cancel"}};
+                break;
+            case OPEN_FILE:
+                message = new String[]{"Open new document without saving changes?",
+                        "Open new document without saving untitled document?"};
+                options = new String[][]{{"Continue", "Save changes", "Cancel"},
+                        {"Save as", "Continue", "Cancel"}};
+                break;
+            case EXIT_PROGRAM:
+                message = new String[]{"Exit without saving changes?",
+                        "Exit without saving untitled document?"};
+                options = new String[][]{{"Exit", "Save changes", "Cancel"},
+                        {"Save as", "Exit", "Cancel"}};
+                break;
+        }
+        if (textDocument.isModified() & !textDocument.isUnsaved()) {
+            int choice = JOptionPane.showOptionDialog(frame,
+                    message[0],
+                    title,
+                    JOptionPane.YES_NO_CANCEL_OPTION,
+                    JOptionPane.QUESTION_MESSAGE,
+                    null,
+                    options[0],
+                    options[0][1]);
+            switch (choice) {
+                case JOptionPane.NO_OPTION -> textDocument.save();
+                case JOptionPane.CANCEL_OPTION, JOptionPane.CLOSED_OPTION -> {
+                    return true;
+                }
+            }
+        } else if (textDocument.isModified() & textDocument.isUnsaved()) {
+            int choice = JOptionPane.showOptionDialog(frame,
+                    message[1],
+                    title,
+                    JOptionPane.YES_NO_CANCEL_OPTION,
+                    JOptionPane.QUESTION_MESSAGE,
+                    null,
+                    options[1],
+                    options[1][0]);
+            switch (choice) {
+                case JOptionPane.YES_OPTION -> createSaveDialog(null);
+                case JOptionPane.CANCEL_OPTION, JOptionPane.CLOSED_OPTION -> {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
      * Invoked when the UI is interacted with
      */
     @Override
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
         if (source == menuBar.fileMenu.newItem) {
-            if (textDocument.isModified() & !textDocument.isUnsaved()) {
-                int choice = JOptionPane.showOptionDialog(frame,
-                        "Create new without saving changes?",
-                        "Unsaved changes",
-                        JOptionPane.YES_NO_CANCEL_OPTION,
-                        JOptionPane.QUESTION_MESSAGE,
-                        null,
-                        new String[]{"Create new", "Save changes", "Cancel"},
-                        "Save changes");
-                switch (choice) {
-                    case JOptionPane.NO_OPTION -> textDocument.save();
-                    case JOptionPane.CANCEL_OPTION -> {
-                        return;
-                    }
-                }
-            } else if (textDocument.isModified() & textDocument.isUnsaved()) {
-                int choice = JOptionPane.showOptionDialog(frame,
-                        "Create new without saving untitled document?",
-                        "Unsaved changes",
-                        JOptionPane.YES_NO_OPTION,
-                        JOptionPane.QUESTION_MESSAGE,
-                        null,
-                        new String[]{"Save as", "Create new"},
-                        "Save as");
-                if (choice == JOptionPane.YES_OPTION)
-                    createSaveDialog(null);
-            }
+            if (promptUnsavedChanges(promptUnsavedChangesSource.NEW_FILE))
+                return;
             textDocument = new TextDocument(this);
             editorPane.inputPane.setStyledDocument(textDocument.document);
             frame.setTitle(textDocument.getName());
         } else if (source == menuBar.fileMenu.openItem) {
-            if (textDocument.isModified() & !textDocument.isUnsaved()) {
-                int choice = JOptionPane.showOptionDialog(frame,
-                        "Open new document without saving changes?",
-                        "Unsaved changes",
-                        JOptionPane.YES_NO_CANCEL_OPTION,
-                        JOptionPane.QUESTION_MESSAGE,
-                        null,
-                        new String[]{"Continue", "Save changes", "Cancel"},
-                        "Save changes");
-                switch (choice) {
-                    case JOptionPane.NO_OPTION -> textDocument.save();
-                    case JOptionPane.CANCEL_OPTION -> {
-                        return;
-                    }
-                }
-            } else if (textDocument.isModified() & textDocument.isUnsaved()) {
-                int choice = JOptionPane.showOptionDialog(frame,
-                        "Open new document without saving untitled document?",
-                        "Unsaved changes",
-                        JOptionPane.YES_NO_OPTION,
-                        JOptionPane.QUESTION_MESSAGE,
-                        null,
-                        new String[]{"Save as", "Continue"},
-                        "Save as");
-                if (choice == JOptionPane.YES_OPTION)
-                    createSaveDialog(null);
-            }
+            if (promptUnsavedChanges(promptUnsavedChangesSource.OPEN_FILE))
+                return;
             createOpenDialog();
         } else if (source == menuBar.fileMenu.saveItem) {
             try {
@@ -290,5 +280,11 @@ public class MainWindow implements ActionListener, WindowListener {
     @Override
     public void windowDeactivated(WindowEvent windowEvent) {
 
+    }
+
+    private enum promptUnsavedChangesSource {
+        NEW_FILE,
+        OPEN_FILE,
+        EXIT_PROGRAM
     }
 }

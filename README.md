@@ -17,7 +17,7 @@ The goal of this project is to learn Java by creating a text editor with a Swing
     - [x] Move menuBar definition to new class in menu package
   - [x] Create package for dialogs
   - [x] Make each area of the ui its own class
-- [ ] Implement file save & open functionality
+- [x] Implement file save & open functionality
   - [x] Create some sort of document class to hold EditorPane contents
   - [x] File save functionality
     - [x] Add item to *File* menu
@@ -30,7 +30,7 @@ The goal of this project is to learn Java by creating a text editor with a Swing
     - [x] Make dialog functional
     - [x] add safety checks for unsaved changes in currently open document
   - [x] Add safety checks to program to prompt saving unsaved changes
-  - [ ] refactor unsaved changes prompts to single function call
+  - [x] refactor unsaved changes prompts to single function call
 - [ ] Add hotkey functionality
   - [ ] Make menu item reflect hotkey
 - [ ] Auto save functionality

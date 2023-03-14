@@ -204,6 +204,7 @@ public class MainWindow implements ActionListener {
             editorPane.inputPane.setStyledDocument(textDocument.document);
             frame.setTitle(textDocument.getName());
         } else if (source == menuBar.fileMenu.openItem) {
+            // TODO: check for unsaved changes
             createOpenDialog();
         } else if (source == menuBar.fileMenu.saveItem) {
             try {

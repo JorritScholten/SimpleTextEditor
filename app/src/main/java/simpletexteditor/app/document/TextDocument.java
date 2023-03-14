@@ -6,14 +6,15 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultStyledDocument;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.AccessDeniedException;
 import java.util.Scanner;
 
 public class TextDocument {
+    /**
+     * ActionListener of parent class so that events may be passed up the hierarchy
+     */
+    private final ActionListener actionListener;
     public DefaultStyledDocument document;
     /**
      * Location of file on system
@@ -27,10 +28,6 @@ public class TextDocument {
      * Tracks whether document has unsaved changes
      */
     private boolean modified = false;
-    /**
-     * ActionListener of parent class so that events may be passed up the hierarchy
-     */
-    private ActionListener actionListener;
 
     /**
      * Construct empty TextDocument class
@@ -55,14 +52,22 @@ public class TextDocument {
             throw new FileNotFoundException(file + " is not a file.");
         if (!file.canRead())
             throw new AccessDeniedException(file.getAbsolutePath());
+        FileReader in = null;
         try {
-            FileReader in = new FileReader(file);
+            in = new FileReader(file);
             Scanner scan = new Scanner(in);
             while (scan.hasNextLine())
                 document.insertString(document.getLength(), scan.nextLine() + "\n", null);
-            in.close();
         } catch (IOException | BadLocationException ex) {
-            System.out.println(ex);
+            throw new RuntimeException(ex.getMessage() + " thrown in TextDocument(), this should not occur.");
+        } finally {
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (IOException ex) {
+                    throw new RuntimeException("Failed to close " + in);
+                }
+            }
         }
         this.file = new File(file.getAbsolutePath());
         name = this.file.getName();
@@ -90,7 +95,22 @@ public class TextDocument {
     public void save() throws NullPointerException {
         if (file == null)
             throw new NullPointerException("file is undefined, call saveAs() instead.");
-        // TODO: implement file saving
+        FileWriter out = null;
+        try {
+            out = new FileWriter(file);
+            out.write(document.getText(0, document.getLength()));
+        } catch (BadLocationException | IOException ex) {
+            throw new RuntimeException(ex.getMessage() + " thrown in TextDocument.save(), this should not occur.");
+        } finally {
+            if (out != null) {
+                try {
+                    out.close();
+                } catch (IOException ex) {
+                    throw new RuntimeException("Failed to close " + out);
+                }
+            }
+
+        }
         documentModified(false);
     }
 
@@ -114,7 +134,7 @@ public class TextDocument {
         // only fire event if there is a change
         if (modified != isModified) {
             modified = isModified;
-            actionListener.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, (String) null));
+            actionListener.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, null));
         }
     }
 

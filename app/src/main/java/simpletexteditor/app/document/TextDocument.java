@@ -47,22 +47,12 @@ public class TextDocument {
             throw new FileNotFoundException(file + " is not a file.");
         if (!file.canRead())
             throw new AccessDeniedException(file.getAbsolutePath());
-        Scanner in = null;
         detectEncoding(file);
-        try {
-            in = new Scanner(file, Charset.forName(encodingName));
+        try (Scanner in = new Scanner(file, Charset.forName(encodingName))) {
             while (in.hasNextLine())
                 document.insertString(document.getLength(), in.nextLine() + "\n", null);
         } catch (IOException | BadLocationException ex) {
             throw new RuntimeException(ex.getMessage() + " thrown in TextDocument(), this should not occur.");
-        } finally {
-            if (in != null) {
-                try {
-                    in.close();
-                } catch (IllegalStateException ex) {
-                    throw new RuntimeException("Failed to close " + in);
-                }
-            }
         }
         this.file = new File(file.getAbsolutePath());
         name = this.file.getName();
@@ -90,12 +80,10 @@ public class TextDocument {
      * @param file File to perform detection on
      */
     private void detectEncoding(File file) {
-        try {
-            FileInputStream fileTest = new FileInputStream(file);
+        try (FileInputStream fileTest = new FileInputStream(file)) {
             CharsetDetector det = new CharsetDetector();
             det.setText(fileTest.readNBytes(1024));
             encodingName = det.detect().getName();
-            fileTest.close();
         } catch (Exception e) {
             System.out.println("detectEncoding failed: " + e + "->" + e.getMessage());
             // default to sane value
@@ -107,21 +95,10 @@ public class TextDocument {
     public void save() throws NullPointerException {
         if (file == null)
             throw new NullPointerException("file is undefined, call saveAs() instead.");
-        FileWriter out = null;
-        try {
-            out = new FileWriter(file, Charset.forName(encodingName));
+        try (FileWriter out = new FileWriter(file, Charset.forName(encodingName))) {
             out.write(document.getText(0, document.getLength()));
         } catch (BadLocationException | IOException ex) {
             throw new RuntimeException(ex.getMessage() + " thrown in TextDocument.save(), this should not occur.");
-        } finally {
-            if (out != null) {
-                try {
-                    out.close();
-                } catch (IOException ex) {
-                    throw new RuntimeException("Failed to close " + out);
-                }
-            }
-
         }
         documentModified(false);
     }

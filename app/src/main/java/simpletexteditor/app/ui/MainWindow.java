@@ -17,21 +17,13 @@ import java.io.IOException;
 import java.nio.file.AccessDeniedException;
 
 public class MainWindow implements ActionListener, WindowListener {
-    /**
-     * JPanel used as top-level container of UI components
-     */
+    /** JPanel used as top-level container of UI components */
     private final JPanel rootPanel;
-    /**
-     * JSrollPane containing the text editor
-     */
+    /** JSrollPane containing the text editor */
     private final EditorPane editorPane;
-    /**
-     * Menu bar at the top of the window
-     */
+    /** Menu bar at the top of the window */
     private final MenuBar menuBar;
-    /**
-     * JFrame containing the top-level window
-     */
+    /** JFrame containing the top-level window */
     private JFrame frame;
     private TextDocument textDocument;
 
@@ -50,7 +42,6 @@ public class MainWindow implements ActionListener, WindowListener {
 
     /**
      * Create frame and start UI
-     *
      * @param title Window title
      */
     public void run(String title) {
@@ -64,9 +55,7 @@ public class MainWindow implements ActionListener, WindowListener {
         frame.setVisible(true);
     }
 
-    /**
-     * Try to close window, checks for unsaved changes and aborts if necessary
-     */
+    /** Try to close window, checks for unsaved changes and aborts if necessary */
     private void exit() {
         if (promptUnsavedChanges(promptUnsavedChangesSource.EXIT_PROGRAM))
             return;
@@ -74,9 +63,7 @@ public class MainWindow implements ActionListener, WindowListener {
         System.exit(0);
     }
 
-    /**
-     * Creates an open file chooser dialog and handles instantiating the new document
-     */
+    /** Creates an open file chooser dialog and handles instantiating the new document */
     private void createOpenDialog() {
         JFileChooser fileChooser = new FileChooser();
         fileChooser.setDialogTitle("Open file");
@@ -100,9 +87,7 @@ public class MainWindow implements ActionListener, WindowListener {
         }
     }
 
-    /**
-     * Creates a save file chooser dialog and handles saving the document
-     */
+    /** Creates a save file chooser dialog and handles saving the document */
     private void createSaveDialog(File file) {
         JFileChooser fileChooser = new FileChooser(file);
         fileChooser.setDialogTitle("Save file");
@@ -147,8 +132,8 @@ public class MainWindow implements ActionListener, WindowListener {
 
     /**
      * Function prompts user to save unsaved changes if there are any, cannot be called recursively.
-     *
-     * @param calledFrom enum specifying where this function called from so that the prompted messages match the context
+     * @param calledFrom enum specifying where this function called from so that the prompted messages match the
+     *                   context
      * @return true if calling method should return immediately without continuing
      */
     private boolean promptUnsavedChanges(promptUnsavedChangesSource calledFrom) {
@@ -209,9 +194,7 @@ public class MainWindow implements ActionListener, WindowListener {
         return false;
     }
 
-    /**
-     * Invoked when the UI is interacted with
-     */
+    /** Invoked when the UI is interacted with */
     @Override
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();

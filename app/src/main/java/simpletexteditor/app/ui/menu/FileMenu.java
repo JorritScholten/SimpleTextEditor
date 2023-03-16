@@ -3,9 +3,7 @@ package simpletexteditor.app.ui.menu;
 import javax.swing.*;
 import java.awt.event.ActionListener;
 
-/**
- * File menu definition
- */
+/** File menu definition */
 public class FileMenu extends JMenu {
     public JMenuItem newItem;
     public JMenuItem openItem;
@@ -15,7 +13,6 @@ public class FileMenu extends JMenu {
 
     /**
      * Creates and populates the File menu as part of the menu bar
-     *
      * @param listener ActionListener needed to pass Actions back to parent
      */
     public FileMenu(ActionListener listener) {

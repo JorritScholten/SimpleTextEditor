@@ -6,16 +6,13 @@ import java.awt.*;
 import java.io.File;
 
 public class FileChooser extends JFileChooser {
-    /**
-     * Constructs a JFileChooser pointing to the user's default directory.
-     */
+    /** Constructs a JFileChooser pointing to the user's default directory. */
     public FileChooser() {
         super();
     }
 
     /**
      * Constructs a JFileChooser using the given File as the path.
-     *
      * @param currentDirectory a File object specifying the path to a file or directory
      */
     public FileChooser(File currentDirectory) {
@@ -24,7 +21,6 @@ public class FileChooser extends JFileChooser {
 
     /**
      * Constructs a JFileChooser using the given FileSystemView.
-     *
      * @param fsv a FileSystemView
      */
     public FileChooser(FileSystemView fsv) {
@@ -33,7 +29,6 @@ public class FileChooser extends JFileChooser {
 
     /**
      * Constructs a JFileChooser using the given current directory and FileSystemView.
-     *
      * @param currentDirectory a File object specifying the path to a file or directory
      * @param fsv              a FileSystemView
      */

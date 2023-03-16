@@ -4,9 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-/**
- * Dialog which displays information about project
- */
+/** Dialog which displays information about project */
 public class AboutDialog extends JDialog {
     private final String aboutText = "<html style=\"text-align:center;\">" +
             "This is a simple text editor with a Swing UI using Gradle as a build system.<br>" +
@@ -15,13 +13,12 @@ public class AboutDialog extends JDialog {
             "Author: <a href=\"https://github.com/JorritScholten\" target=\"_blank\">Jorrit Scholten</a><br>" +
             "Source: <a href=\"https://github.com/JorritScholten/SimpleTextEditor\" target=\"_blank\">https://github.com/JorritScholten/SimpleTextEditor</a><br>" +
             "</html>";
-    private JPanel contentPane;
-    private JButton closeButton;
-    private JTextPane aboutTextPane;
+    private final JPanel contentPane;
+    private final JButton closeButton;
+    private final JTextPane aboutTextPane;
 
     /**
      * Creates dialog displaying information about project
-     *
      * @param owner Reference to parent frame needed so that parent can be locked
      */
     public AboutDialog(Frame owner) {

@@ -5,30 +5,18 @@ import javax.swing.text.DefaultStyledDocument;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
-/**
- * JScrollPane containing the editor elements
- */
+/** JScrollPane containing the editor elements */
 class EditorPane extends JScrollPane {
-    /**
-     * JTextPane where the actual text editing takes place
-     */
+    /** JTextPane where the actual text editing takes place */
     public final JTextPane inputPane;
-    /**
-     * JPanel to contain the multiple JEditorPanes next to each other
-     */
+    /** JPanel to contain the multiple JEditorPanes next to each other */
     private final JPanel editorPanel;
-    /**
-     * LayoutManager for editorPanel
-     */
+    /** LayoutManager for editorPanel */
     private final LayoutManager editorLayout;
-    /**
-     * View-only pane to render the line numbers (unused for now)
-     */
+    /** View-only pane to render the line numbers (unused for now) */
     private JEditorPane lineNumberPane;
 
-    /**
-     * Constructs a JScrollPane containing
-     */
+    /** Constructs a JScrollPane containing */
     public EditorPane(ActionListener listener, DefaultStyledDocument document) {
         inputPane = new JTextPane(document);
         editorLayout = new BorderLayout(0, 0);

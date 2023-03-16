@@ -23,7 +23,7 @@ public class TextDocument {
     private String name = "Untitled";
     /** Tracks whether document has unsaved changes */
     private boolean modified = false;
-    /** Encoding format of text file, defaults to system default */
+    /** Encoding format of document, defaults to system default */
     private String encodingName;
 
     /** Construct empty TextDocument class */
@@ -101,6 +101,11 @@ public class TextDocument {
             throw new RuntimeException(ex.getMessage() + " thrown in TextDocument.save(), this should not occur.");
         }
         documentModified(false);
+    }
+
+    /** Encoding format of document */
+    public String getEncodingName() {
+        return encodingName;
     }
 
     public File getFile() {

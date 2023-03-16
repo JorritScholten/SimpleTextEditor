@@ -13,20 +13,26 @@ The goal of this project is to learn Java by creating a text editor with a Swing
     - [x] Add *New File* item
     - [x] Add *Exit* item
 - [x] Restructure *app.ui* package so that MainWindow doesn't look like an endless list of declarations
-  - [x] put JMenu items in new package and make each menu its own class
-    - [x] move menuBar definition to new class in menu package
-  - [x] create package for dialogs
-  - [x] make each area of the ui its own class
-- [ ] File save functionality
-  - [ ] Create file picker dialog
-  - [ ] Add item to *File* menu
-  - [ ] Add hotkey functionality
+  - [x] Put JMenu items in new package and make each menu its own class
+    - [x] Move menuBar definition to new class in menu package
+  - [x] Create package for dialogs
+  - [x] Make each area of the ui its own class
+- [x] Implement file save & open functionality
+  - [x] Create some sort of document class to hold EditorPane contents
+  - [x] File save functionality
+    - [x] Add item to *File* menu
+    - [x] Create file picker dialog
+    - [x] Make dialog functional
+    - [x] Add checks to see if file already exists
+  - [x] File open functionality
+    - [x] Add item to *File* menu
+    - [x] create file picker dialog
+    - [x] Make dialog functional
+    - [x] add safety checks for unsaved changes in currently open document
+  - [x] Add safety checks to program to prompt saving unsaved changes
+  - [x] refactor unsaved changes prompts to single function call
+- [ ] Add hotkey functionality
   - [ ] Make menu item reflect hotkey
-- [ ] File open functionality
-    - [ ] Reuse file picker dialog
-    - [ ] Add item to *File* menu
-    - [ ] Add hotkey functionality
-    - [ ] Make menu item reflect hotkey
 - [ ] Auto save functionality
 - [ ] **Frequency analysis of characters in text**
 - [ ] Word count feature

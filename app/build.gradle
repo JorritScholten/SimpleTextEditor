@@ -8,6 +8,8 @@ plugins {
 
 dependencies {
     implementation 'org.apache.commons:commons-text'
+    // https://mvnrepository.com/artifact/com.ibm.icu/icu4j
+    implementation group: 'com.ibm.icu', name: 'icu4j', version: '72.1'
     implementation project(':utilities')
 }
 

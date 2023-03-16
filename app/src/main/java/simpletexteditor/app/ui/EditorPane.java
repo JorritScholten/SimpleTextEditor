@@ -1,6 +1,7 @@
 package simpletexteditor.app.ui;
 
 import javax.swing.*;
+import javax.swing.text.DefaultStyledDocument;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
@@ -9,9 +10,9 @@ import java.awt.event.ActionListener;
  */
 class EditorPane extends JScrollPane {
     /**
-     * JEditorPane where the actual text editing takes place
+     * JTextPane where the actual text editing takes place
      */
-    public final JEditorPane inputPane;
+    public final JTextPane inputPane;
     /**
      * JPanel to contain the multiple JEditorPanes next to each other
      */
@@ -28,8 +29,8 @@ class EditorPane extends JScrollPane {
     /**
      * Constructs a JScrollPane containing
      */
-    public EditorPane(ActionListener listener) {
-        inputPane = new JEditorPane("text/plain", null);
+    public EditorPane(ActionListener listener, DefaultStyledDocument document) {
+        inputPane = new JTextPane(document);
         editorLayout = new BorderLayout(0, 0);
         editorPanel = new JPanel(editorLayout);
         editorPanel.add(inputPane, BorderLayout.CENTER);

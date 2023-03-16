@@ -1,5 +1,7 @@
 package simpletexteditor.app.document;
 
+import com.ibm.icu.text.CharsetDetector;
+
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
@@ -7,40 +9,33 @@ import javax.swing.text.DefaultStyledDocument;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
+import java.nio.charset.Charset;
 import java.nio.file.AccessDeniedException;
 import java.util.Scanner;
 
 public class TextDocument {
-    /**
-     * ActionListener of parent class so that events may be passed up the hierarchy
-     */
+    /** ActionListener of parent class so that events may be passed up the hierarchy */
     private final ActionListener actionListener;
     public DefaultStyledDocument document;
-    /**
-     * Location of file on system
-     */
+    /** Location of file on system */
     private File file = null;
-    /**
-     * Name of document
-     */
+    /** Name of document */
     private String name = "Untitled";
-    /**
-     * Tracks whether document has unsaved changes
-     */
+    /** Tracks whether document has unsaved changes */
     private boolean modified = false;
+    /** Encoding format of text file, defaults to system default */
+    private String encodingName;
 
-    /**
-     * Construct empty TextDocument class
-     */
+    /** Construct empty TextDocument class */
     public TextDocument(ActionListener listener) {
         document = new DefaultStyledDocument();
         document.addDocumentListener(new MyDocumentListener());
         actionListener = listener;
+        encodingName = System.getProperty("file.encoding");
     }
 
     /**
      * Construct TextDocument class from file
-     *
      * @param file a File object specifying a text document to populate the class with at initialisation
      */
     public TextDocument(ActionListener listener, File file) throws FileNotFoundException, AccessDeniedException {
@@ -52,19 +47,19 @@ public class TextDocument {
             throw new FileNotFoundException(file + " is not a file.");
         if (!file.canRead())
             throw new AccessDeniedException(file.getAbsolutePath());
-        FileReader in = null;
+        Scanner in = null;
+        detectEncoding(file);
         try {
-            in = new FileReader(file);
-            Scanner scan = new Scanner(in);
-            while (scan.hasNextLine())
-                document.insertString(document.getLength(), scan.nextLine() + "\n", null);
+            in = new Scanner(file, Charset.forName(encodingName));
+            while (in.hasNextLine())
+                document.insertString(document.getLength(), in.nextLine() + "\n", null);
         } catch (IOException | BadLocationException ex) {
             throw new RuntimeException(ex.getMessage() + " thrown in TextDocument(), this should not occur.");
         } finally {
             if (in != null) {
                 try {
                     in.close();
-                } catch (IOException ex) {
+                } catch (IllegalStateException ex) {
                     throw new RuntimeException("Failed to close " + in);
                 }
             }
@@ -76,7 +71,6 @@ public class TextDocument {
 
     /**
      * Saves document to new file, this changes this.file
-     *
      * @param file a File object specifying the text document to write to
      */
     public void saveAs(File file) throws IOException {
@@ -85,19 +79,37 @@ public class TextDocument {
         if (file.exists() & !file.canWrite())
             throw new AccessDeniedException(file.getAbsolutePath());
         this.file = new File(file.getAbsolutePath());
+        detectEncoding(file);
         save();
         name = this.file.getName();
     }
 
     /**
-     * Saves document to file, throws exception when file == null
+     * Detects encoding of file and modifies encodingName to detected encoding if successful, otherwise it defaults to
+     * system default
+     * @param file File to perform detection on
      */
+    private void detectEncoding(File file) {
+        try {
+            FileInputStream fileTest = new FileInputStream(file);
+            CharsetDetector det = new CharsetDetector();
+            det.setText(fileTest.readNBytes(1024));
+            encodingName = det.detect().getName();
+            fileTest.close();
+        } catch (Exception e) {
+            System.out.println("detectEncoding failed: " + e + "->" + e.getMessage());
+            // default to sane value
+            encodingName = System.getProperty("file.encoding");
+        }
+    }
+
+    /** Saves document to file, throws exception when file == null */
     public void save() throws NullPointerException {
         if (file == null)
             throw new NullPointerException("file is undefined, call saveAs() instead.");
         FileWriter out = null;
         try {
-            out = new FileWriter(file);
+            out = new FileWriter(file, Charset.forName(encodingName));
             out.write(document.getText(0, document.getLength()));
         } catch (BadLocationException | IOException ex) {
             throw new RuntimeException(ex.getMessage() + " thrown in TextDocument.save(), this should not occur.");
@@ -142,13 +154,26 @@ public class TextDocument {
     protected class MyDocumentListener implements DocumentListener {
         public void insertUpdate(DocumentEvent e) {
             documentModified(true);
+            debugEvent(e);
         }
 
         public void removeUpdate(DocumentEvent e) {
             documentModified(true);
+            debugEvent(e);
         }
 
         public void changedUpdate(DocumentEvent e) {
+            debugEvent(e);
+        }
+
+        private void debugEvent(DocumentEvent e) {
+//            Document document = e.getDocument();
+//            int changeLength = e.getLength();
+//            System.out.println(e.getType().toString() + ": " +
+//                    changeLength + " character" +
+//                    ((changeLength == 1) ? ". " : "s. ") +
+//                    " Text length = " + document.getLength() +
+//                    ".");
         }
     }
 }

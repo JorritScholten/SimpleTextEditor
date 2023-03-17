@@ -31,11 +31,22 @@ The goal of this project is to learn Java by creating a text editor with a Swing
     - [x] add safety checks for unsaved changes in currently open document
   - [x] Add safety checks to program to prompt saving unsaved changes
   - [x] refactor unsaved changes prompts to single function call
+- [ ] Add general file information toolbar to bottom of window
+  - [ ] Show file encoding
+  - [ ] Line separator currently being used
+  - [ ] Cursor position
+- [ ] Implement a settings configurator
+  - [ ] Add a way save settings to a file so that changes persist over program restarts
+  - [ ] Create a settings dialog
+  - [ ] Add a *Settings* item to a menu
 - [ ] Add hotkey functionality
+  - [ ] Load hotkeys from settings at program startup
   - [ ] Make menu item reflect hotkey
+  - [ ] Add to settings dialog so that hotkeys can be configured
 - [ ] Auto save functionality
 - [ ] **Frequency analysis of characters in text**
 - [ ] Word count feature
+- [ ] Implement word wrapping
 - [ ] Toggleable line numbering on the left side
 - [ ] **File encryption with selectable encryption algorithm.**
 - [ ] Highlighting for specified keywords
